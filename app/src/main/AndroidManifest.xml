@@ -35,7 +35,7 @@
             <!--android:value="AIzaSyDvDan5z9xg3PoPvKpYYl2Ku04KFov3gsI" />-->
 
         <meta-data android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyAVFylJwUSFxST7ifvE_rZWdpx-L11XGsw"/>
+            android:value="@string/google_maps_api"/>
         <!--<meta-data-->
                 <!--android:name="com.google.android.geo.API_KEY"-->
                 <!--android:value="AIzaSyB_iv4fVzvXPAlNwjC3kD2c67rdfdNVj74"-->

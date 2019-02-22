@@ -42,9 +42,9 @@ public class MainViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         this.notifyItemChanged(index);
     }
 
-    public MainViewAdapter(OnMainItemClickedListener activityChangeListener, OnMainItemClickedListener dataChangeListner) {
+    public MainViewAdapter(OnMainItemClickedListener activityChangeListener) {
         this.activityChangeListener = activityChangeListener;
-        this.updateInfoListener = dataChangeListner;
+
     }
 
     @NonNull
@@ -52,7 +52,7 @@ public class MainViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.main_cardview,parent,false);
-        return new MainViewHolder(v,activityChangeListener, updateInfoListener);
+        return new MainViewHolder(v,activityChangeListener);
     }
 
     @Override

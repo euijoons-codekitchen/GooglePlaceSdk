@@ -21,14 +21,14 @@ public class MainViewHolder extends RecyclerView.ViewHolder {
     TextView mDescription;
     int index;
 
-    public MainViewHolder(View itemView, OnMainItemClickedListener onActivityChageListner, OnMainItemClickedListener onDataChangeListner) {
+    public MainViewHolder(View itemView, OnMainItemClickedListener onActivityChageListner) {
         super(itemView);
 
 
         ButterKnife.bind(this,itemView);
-        mTitle.setOnClickListener((view)->{
+        itemView.setOnClickListener((view)->{
             onActivityChageListner.onMainItemClicked(index);
-            onDataChangeListner.onMainItemClicked(index);
+
             //onUpdateInfoListner.onUpdateChnage(index);
 
         });

@@ -75,10 +75,7 @@ public class MainActivity extends AppCompatActivity implements MainView {
         adapter = new MainViewAdapter((index)->{
             mainPresenter.showMapsOnNextActivity(index);
             //have to remove
-        },(index)->{
-
         });
-
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
