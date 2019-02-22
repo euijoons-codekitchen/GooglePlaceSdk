@@ -48,7 +48,18 @@ public class MainActivity extends AppCompatActivity implements MainView {
 
 
         Log.d(TAG, "onCreate: ");
+        MainItem item = adapter.getSpecificItem(0);
+        Observer<String> observer = new Observer<String>() {
+            @Override
+            public void onChanged(@Nullable String s) {
+                MainItem item1 = adapter.getSpecificItem(0);
+
+                item1.setDescription(s);
+                adapter.updateSpecificItem(item1,0);
+            }
+        };
         model = ViewModelProviders.of(this).get(MainItemViewModel.class);
+        MainItemViewModel.getMainItemLiveData().observe(this,observer);
 
     }
 
@@ -65,17 +76,7 @@ public class MainActivity extends AppCompatActivity implements MainView {
             mainPresenter.showMapsOnNextActivity(index);
             //have to remove
         },(index)->{
-            final Observer<String> addressObserver = new Observer<String>() {
-                @Override
-                public void onChanged(@Nullable String s) {
-                    Log.d(TAG, "onChanged: " + s);
-                    //Toast.makeText(getApplicationContext(),"Observer onChanged",Toast.LENGTH_SHORT).show();
-                    MainItem item = adapter.getSpecificItem(index);
-                    item.setDescription(s);
-                    adapter.updateSpecificItem(item,index);
-                }
-            };
-            model.getMainItemLiveData().observe(this,addressObserver);
+
         });
 
         mRecyclerView.setHasFixedSize(true);
