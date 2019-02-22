@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">GooglePlaysSdkPrj</string>
+    <string name="google_places_api">AIzaSyB_iv4fVzvXPAlNwjC3kD2c67rdfdNVj74</string>
+    <string name="google_maps_api">AIzaSyDvDan5z9xg3PoPvKpYYl2Ku04KFov3gsI</string>
+    <string name="google_geo_api">AIzaSyAVFylJwUSFxST7ifvE_rZWdpx-L11XGsw</string>
+</resources>
