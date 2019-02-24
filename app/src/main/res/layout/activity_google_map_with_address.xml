@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".view.findbyaddress.GoogleMapWithAddressActivity">
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/const_mother_findbyaddress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:text="Address = "
+            android:paddingTop="10dp"
+            android:paddingLeft="10dp"
+            android:layout_marginTop="20dp"
+            android:id="@+id/tv_findbyaddress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <EditText
+            android:paddingRight="10dp"
+            app:layout_constraintRight_toRightOf="@id/btn_findbyaddress"
+            app:layout_constraintLeft_toRightOf="@id/tv_findbyaddress"
+            android:id="@+id/edit_findbyaddress"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content" />
+        <Button
+
+            android:text="Find"
+            app:layout_constraintRight_toRightOf="parent"
+            android:id="@+id/btn_findbyaddress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </android.support.constraint.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/tv_middle"
+        app:layout_constraintTop_toBottomOf="@id/const_mother_findbyaddress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <com.google.android.gms.maps.MapView
+        android:id="@+id/map_findbyaddress"
+        app:layout_constraintTop_toBottomOf="@id/tv_middle"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+    </com.google.android.gms.maps.MapView>
+
+
+</android.support.constraint.ConstraintLayout>

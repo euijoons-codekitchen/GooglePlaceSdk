@@ -1,17 +1,13 @@
 package com.example.googleplayssdkprj.presenter;
 
-import android.app.Activity;
-import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
-import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.example.googleplayssdkprj.GlobalApplication;
 import com.example.googleplayssdkprj.dto.MainItem;
 import com.example.googleplayssdkprj.dto.MainItemViewModel;
+import com.example.googleplayssdkprj.view.findbyaddress.GoogleMapWithAddressActivity;
 import com.example.googleplayssdkprj.view.currentposition.CurrentPositionActivity;
-import com.example.googleplayssdkprj.view.mainview.MainActivity;
 import com.example.googleplayssdkprj.view.placepicker.PlacePickerActivity;
 import com.example.googleplayssdkprj.view.mainview.MainView;
 
@@ -44,6 +40,7 @@ public class MainPresenter {
     public void setMainItems(){
         items.add(new MainItem("Current Position"));
         items.add(new MainItem("Place Picker"));
+        items.add(new MainItem("Current Position with http request"));
         mainView.updateList(items);
     }
 
@@ -60,7 +57,8 @@ public class MainPresenter {
                 GlobalApplication.getGlobalApplicationContext().startActivity(new Intent(GlobalApplication.getGlobalApplicationContext(), PlacePickerActivity.class));
                 break;
             case 2:
-
+                Log.d(TAG, "showMapsOnNextActivity: "+"FindByAddress");
+                GlobalApplication.getGlobalApplicationContext().startActivity(new Intent(GlobalApplication.getGlobalApplicationContext(), GoogleMapWithAddressActivity.class));
                 break;
             case 3:
 

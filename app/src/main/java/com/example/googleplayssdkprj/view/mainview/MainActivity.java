@@ -12,7 +12,6 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.example.googleplayssdkprj.R;
 import com.example.googleplayssdkprj.dto.MainItem;
@@ -46,9 +45,12 @@ public class MainActivity extends AppCompatActivity implements MainView {
         setMainPresenterConfig();
         getCurrentLocationPermission();
 
+        setLiveData();
 
-        Log.d(TAG, "onCreate: ");
-        MainItem item = adapter.getSpecificItem(0);
+
+    }
+
+    public void setLiveData(){
         Observer<String> observer = new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
@@ -58,8 +60,19 @@ public class MainActivity extends AppCompatActivity implements MainView {
                 adapter.updateSpecificItem(item1,0);
             }
         };
+        Observer<String> observer1 = new Observer<String>() {
+            @Override
+            public void onChanged(@Nullable String s) {
+                MainItem item = adapter.getSpecificItem(2);
+                item.setDescription(s);
+                adapter.updateSpecificItem(item,2);
+            }
+        };
+
+
         model = ViewModelProviders.of(this).get(MainItemViewModel.class);
-        MainItemViewModel.getMainItemLiveData().observe(this,observer);
+        MainItemViewModel.getFoundAddress().observe(this,observer1);
+        MainItemViewModel.getCurrentAddress().observe(this,observer);
 
     }
 

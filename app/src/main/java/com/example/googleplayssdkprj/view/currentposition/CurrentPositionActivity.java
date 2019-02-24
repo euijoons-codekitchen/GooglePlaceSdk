@@ -17,7 +17,6 @@ import android.widget.Toast;
 
 import com.example.googleplayssdkprj.R;
 import com.example.googleplayssdkprj.dto.MainItemViewModel;
-import com.example.googleplayssdkprj.helper.onBackButtonClickedListener;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -40,6 +39,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.disposables.Disposable;
 
@@ -53,15 +53,17 @@ public class CurrentPositionActivity extends AppCompatActivity implements OnMapR
     private Location mLocation;
 
     private GoogleMap mGoogleMap;
-    private MapView mapView;
+
     private List<Address> address;
     private String currentAddress;
     private Disposable disposable;
-    onBackButtonClickedListener listener;
+
     private GoogleApiClient mGoogleApiClient;
-
+    MapView mapView;
     MainItemViewModel model;
-
+//
+//    @BindView(R.id.map)
+//    MapView mapView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -134,12 +136,9 @@ public class CurrentPositionActivity extends AppCompatActivity implements OnMapR
                     + addr.getFeatureName();
 
 
-            //model.getMainItemLiveData().setAddress(currentAddress);
-            Log.d(TAG, "onConnected: "+model.getMainItemLiveData().getAddress());
-            model.getMainItemLiveData().setValue(currentAddress);//여기선 들어가는데..
-
-            //Log.d(TAG, "onConnected: "+model.getMainItemLiveData().getValue());
-
+            //model.getCurrentAddress().setAddress(currentAddress);
+            Log.d(TAG, "onConnected: "+model.getCurrentAddress().getAddress());
+            model.getCurrentAddress().setValue(currentAddress);
 
             LatLng currentLocation = new LatLng(mLocation.getLatitude(), mLocation.getLongitude());
             MarkerOptions markerOptions = new MarkerOptions();
