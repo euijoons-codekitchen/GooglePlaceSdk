@@ -6,15 +6,7 @@ public class MainItem {
 
     private String title;
     private String description;
-    private Observer<String> observer;
 
-    public Observer<String> getObserver() {
-        return observer;
-    }
-
-    public void setObserver(Observer<String> observer) {
-        this.observer = observer;
-    }
 
     public String getDescription() {
         return description;

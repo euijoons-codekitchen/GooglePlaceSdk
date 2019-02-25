@@ -8,11 +8,13 @@ import com.example.googleplayssdkprj.dto.MainItem;
 import com.example.googleplayssdkprj.dto.MainItemViewModel;
 import com.example.googleplayssdkprj.view.findbyaddress.GoogleMapWithAddressActivity;
 import com.example.googleplayssdkprj.view.currentposition.CurrentPositionActivity;
+import com.example.googleplayssdkprj.view.placenearby.PlaceNearbyActivity;
 import com.example.googleplayssdkprj.view.placepicker.PlacePickerActivity;
 import com.example.googleplayssdkprj.view.mainview.MainView;
 
 import java.util.ArrayList;
 import java.util.List;
+
 
 public class MainPresenter {
 
@@ -41,6 +43,7 @@ public class MainPresenter {
         items.add(new MainItem("Current Position"));
         items.add(new MainItem("Place Picker"));
         items.add(new MainItem("Current Position with http request"));
+        items.add(new MainItem("Places Nearby with http request"));
         mainView.updateList(items);
     }
 
@@ -61,6 +64,9 @@ public class MainPresenter {
                 GlobalApplication.getGlobalApplicationContext().startActivity(new Intent(GlobalApplication.getGlobalApplicationContext(), GoogleMapWithAddressActivity.class));
                 break;
             case 3:
+                Log.d(TAG, "showMapsOnNextActivity: "+"PlaceNearby");
+                GlobalApplication.getGlobalApplicationContext().startActivity(
+                        new Intent(GlobalApplication.getGlobalApplicationContext(), PlaceNearbyActivity.class));
 
                 break;
 

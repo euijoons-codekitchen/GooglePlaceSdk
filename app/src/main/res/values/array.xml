@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="type_array">
+        <item>restaurant</item>
+        <item>cafe</item>
+        <item>bank</item>
+        <item>bar</item>
+        <item>bus_station</item>
+        <item>supermarket</item>
+        <item>subway_station</item>
+        <item>hospital</item>
+    </string-array>
+</resources>
+

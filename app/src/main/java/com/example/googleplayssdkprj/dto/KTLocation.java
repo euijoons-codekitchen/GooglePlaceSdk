@@ -4,12 +4,16 @@ public class KTLocation {
 
     private String formatted_address;
     private Double lat;
-    private Double lng;
+    private Double lon;
 
-    public KTLocation(String formatted_address, Double lat, Double lng) {
+
+    public KTLocation() {
+    }
+
+    public KTLocation(String formatted_address, Double lat, Double lon) {
         this.formatted_address = formatted_address;
         this.lat = lat;
-        this.lng = lng;
+        this.lon = lon;
     }
 
     public String getFormatted_address() {
@@ -28,11 +32,11 @@ public class KTLocation {
         this.lat = lat;
     }
 
-    public Double getLng() {
-        return lng;
+    public Double getLon() {
+        return lon;
     }
 
-    public void setLng(Double lng) {
-        this.lng = lng;
+    public void setLon(Double lon) {
+        this.lon = lon;
     }
 }

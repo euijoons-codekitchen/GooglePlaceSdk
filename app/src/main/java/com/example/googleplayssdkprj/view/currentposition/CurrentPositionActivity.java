@@ -16,7 +16,9 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.example.googleplayssdkprj.R;
+import com.example.googleplayssdkprj.dto.KTLocation;
 import com.example.googleplayssdkprj.dto.MainItemViewModel;
+import com.example.googleplayssdkprj.helper.CurrentLocationManager;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -50,18 +52,15 @@ public class CurrentPositionActivity extends AppCompatActivity implements OnMapR
     private static final int PLACE_PICKER_REQUEST = 10;
     private String TAG = CurrentPositionActivity.class.getName();
     private PlacesClient mPlacesClient;
-    private Location mLocation;
+
 
     private GoogleMap mGoogleMap;
 
     private List<Address> address;
-    private String currentAddress;
-    private Disposable disposable;
-
     private GoogleApiClient mGoogleApiClient;
     MapView mapView;
-    MainItemViewModel model;
-//
+    CurrentLocationManager currentLocationManager;
+    //
 //    @BindView(R.id.map)
 //    MapView mapView;
     @Override
@@ -72,22 +71,18 @@ public class CurrentPositionActivity extends AppCompatActivity implements OnMapR
         ButterKnife.bind(this);
         setContentView(R.layout.activity_current_position);
 
-        model = ViewModelProviders.of(this).get(MainItemViewModel.class);
+        currentLocationManager = new CurrentLocationManager(this,this);
+        readyMap(savedInstanceState);
+        mGoogleApiClient = currentLocationManager.getmGoogleApiClient();
+    }
 
+    public void readyMap(Bundle savedInstanceState){
         mapView = (MapView) findViewById(R.id.map);
         if(mapView!=null)
             mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
 
-        mGoogleApiClient = new GoogleApiClient.Builder(this).
-                addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(LocationServices.API)
-                .build();
     }
-
-
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -121,37 +116,22 @@ public class CurrentPositionActivity extends AppCompatActivity implements OnMapR
     public void onConnected(@Nullable Bundle bundle) {
         Log.d(TAG, "onConnected: ");
         mapView.onStart();
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
-        mLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+        KTLocation ktLocation = currentLocationManager.getCurrentLocation();
+        MainItemViewModel.getCurrentAddress().setValue(ktLocation.getFormatted_address());
+        setMarkerWithCoordinates(ktLocation.getLat(),ktLocation.getLon(),ktLocation.getFormatted_address());
 
-        Geocoder geocoder = new Geocoder(this, Locale.KOREA);
-        try {
-            address = geocoder.getFromLocation(mLocation.getLatitude(), mLocation.getLongitude(), 3);
-            //String currentLocationAddress = address.get(0).getAddressLine(0).toString();
-            Address addr = address.get(0);
-            currentAddress = addr.getCountryName() + " " + addr.getPostalCode() + " " + addr.getLocality() + " "
-                    + addr.getThoroughfare() + " "
-                    + addr.getFeatureName();
-
-
-            //model.getCurrentAddress().setAddress(currentAddress);
-            Log.d(TAG, "onConnected: "+model.getCurrentAddress().getAddress());
-            model.getCurrentAddress().setValue(currentAddress);
-
-            LatLng currentLocation = new LatLng(mLocation.getLatitude(), mLocation.getLongitude());
-            MarkerOptions markerOptions = new MarkerOptions();
-            markerOptions.position(currentLocation);
-            markerOptions.title(currentAddress);
-            mGoogleMap.addMarker(markerOptions);
-            mGoogleMap.moveCamera(CameraUpdateFactory.newLatLng(currentLocation));
-            mGoogleMap.animateCamera(CameraUpdateFactory.zoomTo(13));
-            Toast.makeText(getApplicationContext(), currentAddress, Toast.LENGTH_SHORT).show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
+    public void setMarkerWithCoordinates(Double lat, Double lan, String currentAddress){
+        LatLng currentLocation = new LatLng(lat,lan);
+        MarkerOptions markerOptions = new MarkerOptions();
+        markerOptions.position(currentLocation);
+        markerOptions.title(currentAddress);
+        mGoogleMap.addMarker(markerOptions);
+        mGoogleMap.moveCamera(CameraUpdateFactory.newLatLng(currentLocation));
+        mGoogleMap.animateCamera(CameraUpdateFactory.zoomTo(13));
+        Toast.makeText(getApplicationContext(), currentAddress, Toast.LENGTH_SHORT).show();
+    }
+
 
     @Override
     public void onConnectionSuspended(int i) {
@@ -164,37 +144,5 @@ public class CurrentPositionActivity extends AppCompatActivity implements OnMapR
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         Log.d(TAG, "onConnectionFailed: ");
     }
-    //Place API
-    public void permissionConfiguration(){
-        List<Place.Field> fields = Arrays.asList(Place.Field.NAME);
-        FindCurrentPlaceRequest findCurrentPlaceRequest
-                = FindCurrentPlaceRequest.builder(fields).build();
-
-        if(ContextCompat.checkSelfPermission(this,ACCESS_FINE_LOCATION) ==
-                PackageManager.PERMISSION_GRANTED){
-            Task<FindCurrentPlaceResponse> placeResponses = mPlacesClient.findCurrentPlace(findCurrentPlaceRequest);
-            placeResponses.addOnCompleteListener(task -> {
-                if( task.isSuccessful()){
-                    //loadGoogleMap();
-                    FindCurrentPlaceResponse response = task.getResult();
-                    Log.d(TAG, "onCreate: onSuccessful");
-                    for(PlaceLikelihood likelihood : response.getPlaceLikelihoods()){
-                        Log.d(TAG, "onCreate: "+likelihood.getPlace().getName());
-                        Log.d(TAG, "onCreate: "+likelihood.getPlace().getAddress());
-                    }
-
-                }else{
-                    Exception exception = task.getException();
-                    if(exception instanceof ApiException){
-                        ApiException exception1 = (ApiException) exception;
-                        Log.d(TAG, "onCreate: " + exception1);
-                    }
-                }
-            });
-        }else{
-            //getCurrentLocationPermission();
-        }
-    }
-
-
+  
 }

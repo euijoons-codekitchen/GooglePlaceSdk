@@ -6,7 +6,8 @@ import com.example.googleplayssdkprj.GlobalApplication;
 import com.example.googleplayssdkprj.dto.KTLocation;
 import com.example.googleplayssdkprj.dto.MainItemViewModel;
 import com.example.googleplayssdkprj.helper.ApiService;
-import com.example.googleplayssdkprj.view.findbyaddress.FindByAddressView;
+import com.example.googleplayssdkprj.helper.RetrofitClient;
+import com.example.googleplayssdkprj.view.findbyaddress.OnLocationReadyView;
 import com.google.gson.internal.LinkedTreeMap;
 
 import java.util.ArrayList;
@@ -21,18 +22,19 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class FindByAddressPresenter {
 
     String TAG = FindByAddressPresenter.class.getName();
-    private FindByAddressView view;
+    private OnLocationReadyView view;
     private Retrofit retrofit;
-    public FindByAddressPresenter(FindByAddressView view){
+    public FindByAddressPresenter(OnLocationReadyView view){
         this.view = view;
         setupRetrofit();
     }
 
     private void setupRetrofit() {
-        retrofit = new Retrofit.Builder()
-                .baseUrl("https://maps.googleapis.com/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
+//        retrofit = new Retrofit.Builder()
+//                .baseUrl("https://maps.googleapis.com/")
+//                .addConverterFactory(GsonConverterFactory.create())
+//                .build();
+        retrofit = RetrofitClient.getRetrofit();
     }
 
     public void getInfoFromServer(String keyword){

@@ -12,6 +12,7 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.example.googleplayssdkprj.R;
 import com.example.googleplayssdkprj.dto.MainItem;
@@ -51,28 +52,23 @@ public class MainActivity extends AppCompatActivity implements MainView {
     }
 
     public void setLiveData(){
-        Observer<String> observer = new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-                MainItem item1 = adapter.getSpecificItem(0);
 
-                item1.setDescription(s);
-                adapter.updateSpecificItem(item1,0);
-            }
-        };
-        Observer<String> observer1 = new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-                MainItem item = adapter.getSpecificItem(2);
-                item.setDescription(s);
-                adapter.updateSpecificItem(item,2);
-            }
+        Observer<String> currentLocationObserver = (s) ->{
+            MainItem item1 = adapter.getSpecificItem(0);
+
+            item1.setDescription(s);
+            adapter.updateSpecificItem(item1,0);
         };
 
+        Observer<String> foundAddressObserver = (s) ->{
+            MainItem item = adapter.getSpecificItem(2);
+            item.setDescription(s);
+            adapter.updateSpecificItem(item,2);
+        };
 
         model = ViewModelProviders.of(this).get(MainItemViewModel.class);
-        MainItemViewModel.getFoundAddress().observe(this,observer1);
-        MainItemViewModel.getCurrentAddress().observe(this,observer);
+        MainItemViewModel.getFoundAddress().observe(this,foundAddressObserver);
+        MainItemViewModel.getCurrentAddress().observe(this,currentLocationObserver);
 
     }
 
@@ -92,9 +88,7 @@ public class MainActivity extends AppCompatActivity implements MainView {
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
-
         mRecyclerView.setClickable(true);
-
         mRecyclerView.setAdapter(adapter);
 
     }
@@ -115,8 +109,11 @@ public class MainActivity extends AppCompatActivity implements MainView {
                 PackageManager.PERMISSION_GRANTED
         ){
             Log.d(TAG, "getCurrentLocationPermission: " + "Permission Granted");
-        }else
+        }else{
             Log.d(TAG, "getCurrentLocationPermission: " + "Permission Denied");
+            Toast.makeText(getApplicationContext(),"위치 정보 제공에 동의해 주십시오",Toast.LENGTH_SHORT).show();
+        }
+
     }
 
 

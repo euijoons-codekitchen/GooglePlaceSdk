@@ -1,6 +1,5 @@
 package com.example.googleplayssdkprj.view.findbyaddress;
 
-import android.location.Location;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -11,11 +10,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.googleplayssdkprj.GlobalApplication;
 import com.example.googleplayssdkprj.R;
 import com.example.googleplayssdkprj.dto.KTLocation;
-import com.example.googleplayssdkprj.dto.MainItemViewModel;
-import com.example.googleplayssdkprj.helper.ApiService;
+import com.example.googleplayssdkprj.helper.CurrentLocationManager;
 import com.example.googleplayssdkprj.presenter.FindByAddressPresenter;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -25,41 +22,31 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class GoogleMapWithAddressActivity extends AppCompatActivity
         implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener,FindByAddressView {
+        GoogleApiClient.OnConnectionFailedListener, OnLocationReadyView {
 
 
     private String TAG = GoogleMapWithAddressActivity.class.getName();
-    private Location mLocation;
 
     private GoogleMap mGoogleMap;
     MapView mapView;
 
-    @BindView(R.id.edit_findbyaddress)
+    @BindView(R.id.edit_placenearby)
     EditText editText;
-    @BindView(R.id.btn_findbyaddress)
+    @BindView(R.id.btn_placenearby)
     Button button;
-    @BindView(R.id.tv_middle)
+    @BindView(R.id.tv_middle_placenearby)
     TextView textView;
 
-    private MainItemViewModel model;
     private GoogleApiClient mGoogleApiClient;
     private FindByAddressPresenter presenter;
-    private Retrofit retrofit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,10 +61,6 @@ public class GoogleMapWithAddressActivity extends AppCompatActivity
             presenter.getInfoFromServer(editText.getText().toString());
 
         });
-
-
-
-
     }
 
     @Override
@@ -98,36 +81,40 @@ public class GoogleMapWithAddressActivity extends AppCompatActivity
     public void drawmap(KTLocation ktLocation) {
         Log.d(TAG, "drawmap: ");
 
-        textView.setText(ktLocation.getFormatted_address()+" "+ktLocation.getLat()+" "+ktLocation.getLng());
+        textView.setText(ktLocation.getFormatted_address()+" "+ktLocation.getLat()+" "+ktLocation.getLon());
 
-        LatLng currentLocation = new LatLng(ktLocation.getLat(), ktLocation.getLng());
+        LatLng currentLocation = new LatLng(ktLocation.getLat(), ktLocation.getLon());
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(currentLocation);
         markerOptions.title(ktLocation.getFormatted_address());
+        mGoogleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                Log.d(TAG, "onMarkerClick: "+marker.getTitle());
+                Toast.makeText(getApplicationContext(),marker.getTitle(),Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        });
         mGoogleMap.addMarker(markerOptions);
         mGoogleMap.moveCamera(CameraUpdateFactory.newLatLng(currentLocation));
         mGoogleMap.animateCamera(CameraUpdateFactory.zoomTo(13));
         Toast.makeText(getApplicationContext(), ktLocation.getFormatted_address(), Toast.LENGTH_SHORT).show();
     }
 
-    public void setmGoogleMap(Bundle savedInstanceState){
+    public void setmGoogleMap(Bundle savedInstanceState) {
 
-        mapView = (MapView) findViewById(R.id.map_findbyaddress);
-
-
-        if(mapView!=null)
+        mapView = (MapView) findViewById(R.id.map_placenearby);
+        if (mapView != null)
             mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
-
         mGoogleApiClient = new GoogleApiClient.Builder(this).
                 addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .addApi(LocationServices.API)
                 .build();
+
+
     }
-
-
-
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         mGoogleApiClient.connect();
