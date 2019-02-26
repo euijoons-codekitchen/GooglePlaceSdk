@@ -13,6 +13,7 @@ import com.google.gson.internal.LinkedTreeMap;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import okhttp3.Request;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -37,8 +38,8 @@ public class FindByAddressPresenter {
         retrofit = RetrofitClient.getRetrofit();
     }
 
-    public void getInfoFromServer(String keyword){
-        Log.d(TAG, "getInfoFromServer: "+keyword);
+    public void getCurrentLocationFromServer(String keyword){
+        Log.d(TAG, "getCurrentLocationFromServer: "+keyword);
         ApiService service = (ApiService) retrofit.create(ApiService.class);
         Call<HashMap<String,Object>> c = service.findByAddress(keyword, GlobalApplication.getApiKey());
         c.enqueue(new Callback<HashMap<String, Object>>() {
@@ -64,13 +65,14 @@ public class FindByAddressPresenter {
                     Log.d(TAG, "onResponse: lat : " +lat);
                     Log.d(TAG, "onResponse: lng : "+lng);
                     MainItemViewModel.getFoundAddress().setValue(formatted_address);
-                    view.drawmap(new KTLocation(formatted_address,lat,lng));
+                    view.drawMarker(new KTLocation(formatted_address,lat,lng));
                 }
 
             }
 
             @Override
             public void onFailure(Call<HashMap<String, Object>> call, Throwable t) {
+                Request request = call.request();
                 Log.d(TAG, "onFailure: ");
                 t.printStackTrace();
             }

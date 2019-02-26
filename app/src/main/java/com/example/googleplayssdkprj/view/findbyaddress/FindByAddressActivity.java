@@ -12,11 +12,11 @@ import android.widget.Toast;
 
 import com.example.googleplayssdkprj.R;
 import com.example.googleplayssdkprj.dto.KTLocation;
+import com.example.googleplayssdkprj.dto.MainItemViewModel;
 import com.example.googleplayssdkprj.helper.CurrentLocationManager;
 import com.example.googleplayssdkprj.presenter.FindByAddressPresenter;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -28,37 +28,39 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class GoogleMapWithAddressActivity extends AppCompatActivity
+public class FindByAddressActivity extends AppCompatActivity
         implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener, OnLocationReadyView {
+        GoogleApiClient.OnConnectionFailedListener, OnLocationReadyView ,GoogleMap.OnMarkerClickListener{
 
 
-    private String TAG = GoogleMapWithAddressActivity.class.getName();
+    private String TAG = FindByAddressActivity.class.getName();
 
     private GoogleMap mGoogleMap;
     MapView mapView;
 
-    @BindView(R.id.edit_placenearby)
+    @BindView(R.id.edit_findbyaddress)
     EditText editText;
-    @BindView(R.id.btn_placenearby)
+    @BindView(R.id.btn_findbyaddress)
     Button button;
-    @BindView(R.id.tv_middle_placenearby)
+    @BindView(R.id.tv_middle_findbyaddress)
     TextView textView;
 
-    private GoogleApiClient mGoogleApiClient;
+    private CurrentLocationManager manager;
     private FindByAddressPresenter presenter;
+    private  GoogleApiClient mGoogleApiClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_google_map_with_address);
+        setContentView(R.layout.activity_findbyaddress);
         presenter = new FindByAddressPresenter(this);
         ButterKnife.bind(this);
 
         setmGoogleMap(savedInstanceState);
+
         button.setOnClickListener((v)->{
             Log.d(TAG, "setOnclickListner: " + editText.getText().toString());
-            presenter.getInfoFromServer(editText.getText().toString());
+            presenter.getCurrentLocationFromServer(editText.getText().toString());
 
         });
     }
@@ -78,8 +80,15 @@ public class GoogleMapWithAddressActivity extends AppCompatActivity
     }
 
     @Override
-    public void drawmap(KTLocation ktLocation) {
-        Log.d(TAG, "drawmap: ");
+    public boolean onMarkerClick(Marker marker) {
+        Log.d(TAG, "onMarkerClick: "+marker.getTitle());
+        Toast.makeText(getApplicationContext(),marker.getTitle(),Toast.LENGTH_SHORT).show();
+        return true;
+    }
+
+    @Override
+    public void drawMarker(KTLocation ktLocation) {
+        Log.d(TAG, "drawMarker: ");
 
         textView.setText(ktLocation.getFormatted_address()+" "+ktLocation.getLat()+" "+ktLocation.getLon());
 
@@ -90,9 +99,9 @@ public class GoogleMapWithAddressActivity extends AppCompatActivity
         mGoogleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
-                Log.d(TAG, "onMarkerClick: "+marker.getTitle());
-                Toast.makeText(getApplicationContext(),marker.getTitle(),Toast.LENGTH_SHORT).show();
-                return false;
+//                Log.d(TAG, "onMarkerClick: "+marker.getTitle());
+//                Toast.makeText(getApplicationContext(),marker.getTitle(),Toast.LENGTH_SHORT).show();
+                return true;
             }
         });
         mGoogleMap.addMarker(markerOptions);
@@ -103,25 +112,40 @@ public class GoogleMapWithAddressActivity extends AppCompatActivity
 
     public void setmGoogleMap(Bundle savedInstanceState) {
 
-        mapView = (MapView) findViewById(R.id.map_placenearby);
+        mapView = (MapView) findViewById(R.id.map_findbyaddress);
         if (mapView != null)
             mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
-        mGoogleApiClient = new GoogleApiClient.Builder(this).
-                addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(LocationServices.API)
-                .build();
+        manager = new CurrentLocationManager(this,this);
+        mGoogleApiClient = manager.getmGoogleApiClient();
 
 
     }
+
+
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         mGoogleApiClient.connect();
         mapView.onStart();
-
+        KTLocation ktLocation = manager.getCurrentLocation();
+        setMarkerWithCoordinates(ktLocation.getLat(),ktLocation.getLon(),ktLocation.getFormatted_address());
 
     }
+
+    public void setMarkerWithCoordinates(Double lat, Double lan, String currentAddress){
+        LatLng currentLocation = new LatLng(lat,lan);
+        MarkerOptions markerOptions = new MarkerOptions();
+        markerOptions.position(currentLocation);
+        markerOptions.title(currentAddress);
+
+        MainItemViewModel.getFoundAddress().setValue(currentAddress);
+
+        mGoogleMap.addMarker(markerOptions);
+        mGoogleMap.moveCamera(CameraUpdateFactory.newLatLng(currentLocation));
+        mGoogleMap.animateCamera(CameraUpdateFactory.zoomTo(13));
+        Toast.makeText(getApplicationContext(), currentAddress, Toast.LENGTH_SHORT).show();
+    }
+
 
     @Override
     public void onConnectionSuspended(int i) {

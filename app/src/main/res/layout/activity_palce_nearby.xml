@@ -37,19 +37,34 @@
 
     </android.support.constraint.ConstraintLayout>
 
-    <TextView
-        android:id="@+id/tv_middle_placenearby"
+    <android.support.constraint.ConstraintLayout
         app:layout_constraintTop_toBottomOf="@id/const_mother_placenearby"
+        android:id="@+id/const_middle_placenearby"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-    <android.support.v7.widget.AppCompatSpinner
-        app:layout_constraintTop_toBottomOf="@id/tv_middle_placenearby"
-        android:id="@+id/spinner_placenearby"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"></android.support.v7.widget.AppCompatSpinner>
+        android:layout_height="0dp">
+        <TextView
+            android:id="@+id/tv_middle_placenearby"
+            android:hint="current location : "
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <android.support.v7.widget.AppCompatSpinner
+            app:layout_constraintTop_toBottomOf="@id/tv_middle_placenearby"
+
+            android:id="@+id/spinner_placenearby"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <Button
+            app:layout_constraintRight_toRightOf="parent"
+            android:text="findNearby"
+            android:id="@+id/btn_placenearby_findnearby"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </android.support.constraint.ConstraintLayout>
+
     <com.google.android.gms.maps.MapView
         android:id="@+id/map_placenearby"
-        app:layout_constraintTop_toBottomOf="@id/spinner_placenearby"
+        app:layout_constraintTop_toBottomOf="@id/const_middle_placenearby"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent">

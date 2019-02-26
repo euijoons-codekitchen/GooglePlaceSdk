@@ -18,10 +18,10 @@ import java.util.List;
 import java.util.Locale;
 
 public class CurrentLocationManager {
-    private KTLocation location;
-    private List<Address> address;
-    private static GoogleApiClient mGoogleApiClient;
 
+
+    private GoogleApiClient mGoogleApiClient;
+    //apiclient list 만들기..?
 
     public CurrentLocationManager(GoogleApiClient.ConnectionCallbacks connectionCallbacks, GoogleApiClient.OnConnectionFailedListener failedListener) {
         mGoogleApiClient = new GoogleApiClient.Builder(GlobalApplication.getGlobalApplicationContext()).
@@ -29,7 +29,7 @@ public class CurrentLocationManager {
                 .addOnConnectionFailedListener(failedListener)
                 .addApi(LocationServices.API)
                 .build();
-        address = new ArrayList<>();
+
     }
 
     public KTLocation getCurrentLocation(){
@@ -43,7 +43,8 @@ public class CurrentLocationManager {
 
         Geocoder geocoder = new Geocoder(GlobalApplication.getGlobalApplicationContext(), Locale.KOREA);
         try {
-            address = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 3);
+
+            List<Address> address = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 3);
             //String currentLocationAddress = address.get(0).getAddressLine(0).toString();
             Address addr = address.get(0);
             String currentAddress = addr.getCountryName() + " " + addr.getPostalCode() + " " + addr.getLocality() + " "
@@ -62,7 +63,7 @@ public class CurrentLocationManager {
         return ktLocation;
     }
 
-    public static GoogleApiClient getmGoogleApiClient() {
+    public GoogleApiClient getmGoogleApiClient() {
         return mGoogleApiClient;
     }
 

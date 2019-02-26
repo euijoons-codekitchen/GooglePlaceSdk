@@ -6,7 +6,7 @@ import android.util.Log;
 import com.example.googleplayssdkprj.GlobalApplication;
 import com.example.googleplayssdkprj.dto.MainItem;
 import com.example.googleplayssdkprj.dto.MainItemViewModel;
-import com.example.googleplayssdkprj.view.findbyaddress.GoogleMapWithAddressActivity;
+import com.example.googleplayssdkprj.view.findbyaddress.FindByAddressActivity;
 import com.example.googleplayssdkprj.view.currentposition.CurrentPositionActivity;
 import com.example.googleplayssdkprj.view.placenearby.PlaceNearbyActivity;
 import com.example.googleplayssdkprj.view.placepicker.PlacePickerActivity;
@@ -61,7 +61,7 @@ public class MainPresenter {
                 break;
             case 2:
                 Log.d(TAG, "showMapsOnNextActivity: "+"FindByAddress");
-                GlobalApplication.getGlobalApplicationContext().startActivity(new Intent(GlobalApplication.getGlobalApplicationContext(), GoogleMapWithAddressActivity.class));
+                GlobalApplication.getGlobalApplicationContext().startActivity(new Intent(GlobalApplication.getGlobalApplicationContext(), FindByAddressActivity.class));
                 break;
             case 3:
                 Log.d(TAG, "showMapsOnNextActivity: "+"PlaceNearby");

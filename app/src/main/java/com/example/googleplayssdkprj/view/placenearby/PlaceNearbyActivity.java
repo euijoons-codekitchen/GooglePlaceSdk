@@ -11,40 +11,53 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.googleplayssdkprj.R;
 import com.example.googleplayssdkprj.dto.KTLocation;
+import com.example.googleplayssdkprj.helper.CurrentLocationManager;
 import com.example.googleplayssdkprj.presenter.PlaceNearbyPresenter;
 import com.example.googleplayssdkprj.view.findbyaddress.OnLocationReadyView;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class PlaceNearbyActivity extends AppCompatActivity
         implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener, OnLocationReadyView, AdapterView.OnItemSelectedListener {
+        GoogleApiClient.OnConnectionFailedListener, OnLocationReadyView, AdapterView.OnItemSelectedListener
+        ,GoogleMap.OnMarkerClickListener{
 
     private String TAG = PlaceNearbyActivity.class.getName();
-
+    @BindView(R.id.tv_middle_placenearby)
+    TextView textView;
     @BindView(R.id.edit_placenearby)
     EditText mEditText;
     @BindView(R.id.btn_placenearby)
-    Button button;
+    Button mButtonFindAddress;
+    @BindView(R.id.btn_placenearby_findnearby)
+    Button mButtonFindNearby;
     @BindView(R.id.spinner_placenearby)
     Spinner mSpinner;
 
 
+
+    CurrentLocationManager manager;
     private MapView mMapView;
     private GoogleMap mGoogleMap;
     private PlaceNearbyPresenter presenter;
     private GoogleApiClient mGoogleApiClient;
     private ArrayAdapter<CharSequence> adapter;
+
     private String type;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,12 +72,25 @@ public class PlaceNearbyActivity extends AppCompatActivity
         setPresenter(this);
         setmGoogleMap(savedInstanceState);
         setSpinner();
-        button.setOnClickListener((v)->{
 
-
+        mButtonFindAddress.setOnClickListener((v)->{
+            presenter.getCurrentLocationFromServer(mEditText.getText().toString());
+        });
+        mButtonFindNearby.setOnClickListener((v)->{
+            //presenter.getNearbyInfoFromServer();
         });
     }
 
+    public void getDefaultLocationAndDrawMarker(){
+        KTLocation ktLocation = manager.getCurrentLocation();
+        setMarkerWithCoordinates(ktLocation.getLat(),ktLocation.getLon(),ktLocation.getFormatted_address());
+    }
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        Log.d(TAG, "onMarkerClick: "+marker.getTitle());
+        Toast.makeText(getApplicationContext(),marker.getTitle(),Toast.LENGTH_SHORT).show();
+        return true;
+    }
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -91,19 +117,17 @@ public class PlaceNearbyActivity extends AppCompatActivity
 
     private void setPresenter(OnLocationReadyView view) {
         presenter = new PlaceNearbyPresenter(view);
-
     }
+
 
     public void setmGoogleMap(Bundle savedInstanceState){
         mMapView = (MapView) findViewById(R.id.map_placenearby);
         if (mMapView != null)
             mMapView.onCreate(savedInstanceState);
         mMapView.getMapAsync(this);
-        mGoogleApiClient = new GoogleApiClient.Builder(this).
-                addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(LocationServices.API)
-                .build();
+        manager = new CurrentLocationManager(this,this);
+        mGoogleApiClient = manager.getmGoogleApiClient();
+
     }
 
 
@@ -122,17 +146,40 @@ public class PlaceNearbyActivity extends AppCompatActivity
     }
 
     @Override
-    public void drawmap(KTLocation ktLocation) {
+    public void drawMarker(KTLocation ktLocation) {
+        textView.setText(ktLocation.getFormatted_address()+" "+ktLocation.getLat()+" "+ktLocation.getLon());
 
+        LatLng currentLocation = new LatLng(ktLocation.getLat(), ktLocation.getLon());
+        MarkerOptions markerOptions = new MarkerOptions();
+        markerOptions.position(currentLocation);
+        markerOptions.title(ktLocation.getFormatted_address());
+        mGoogleMap.setOnMarkerClickListener((GoogleMap.OnMarkerClickListener)this);
+
+        mGoogleMap.addMarker(markerOptions);
+        mGoogleMap.moveCamera(CameraUpdateFactory.newLatLng(currentLocation));
+        mGoogleMap.animateCamera(CameraUpdateFactory.zoomTo(13));
+        Toast.makeText(getApplicationContext(), ktLocation.getFormatted_address(), Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         mGoogleApiClient.connect();
         mMapView.onStart();
+        getDefaultLocationAndDrawMarker();
 
     }
+    public void setMarkerWithCoordinates(Double lat, Double lan, String currentAddress){
+        LatLng currentLocation = new LatLng(lat,lan);
+        MarkerOptions markerOptions = new MarkerOptions();
+        markerOptions.position(currentLocation);
+        markerOptions.title(currentAddress);
 
+        mGoogleMap.addMarker(markerOptions);
+        mGoogleMap.moveCamera(CameraUpdateFactory.newLatLng(currentLocation));
+        mGoogleMap.animateCamera(CameraUpdateFactory.zoomTo(13));
+
+        Toast.makeText(getApplicationContext(), currentAddress, Toast.LENGTH_SHORT).show();
+    }
     @Override
     public void onConnectionSuspended(int i) {
         mGoogleApiClient.connect();
@@ -141,7 +188,7 @@ public class PlaceNearbyActivity extends AppCompatActivity
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
+        Log.d(TAG, "onConnectionFailed: ");
     }
 
     @Override
