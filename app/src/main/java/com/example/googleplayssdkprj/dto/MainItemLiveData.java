@@ -10,18 +10,12 @@ public class MainItemLiveData extends MutableLiveData<String> {
 
     private String Address;
     private String TAG = MainItemLiveData.class.getName();
+
     public MainItemLiveData() {
 
         Log.d(TAG, "MainItemLiveData: ");
     }
 
-    public String getAddress() {
-        return Address;
-    }
-
-    public void setAddress(String address) {
-        Address = address;
-    }
 
 
     @Override

@@ -6,4 +6,87 @@
     android:layout_height="match_parent"
     tools:context=".view.SpecificPlaceActivity">
 
+    <TextView
+        android:text="store name"
+        android:textSize="40sp"
+        android:textStyle="bold"
+        android:id="@+id/tv_specific_storename"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <RelativeLayout
+        android:id="@+id/relative_specific_middle"
+        app:layout_constraintTop_toBottomOf="@id/tv_specific_storename"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:background="@color/quantum_black_hint_text">
+        <ImageView
+            android:scaleType="center"
+            android:layout_centerInParent="true"
+            android:src="@mipmap/ic_launcher"
+            android:id="@+id/img_specific_storephoto"
+            android:layout_width="match_parent"
+            android:layout_height="300dp" />
+    </RelativeLayout>
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/const_specific_middle"
+        android:paddingTop="20dp"
+        app:layout_constraintTop_toBottomOf="@id/relative_specific_middle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:textSize="24sp"
+            android:id="@+id/tv_specific_middle_rating"
+            android:text="Rating : "
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:textSize="24sp"
+            app:layout_constraintLeft_toRightOf="@id/tv_specific_middle_rating"
+            app:layout_constraintRight_toRightOf="parent"
+            android:id="@+id/tv_specific_middle_rating_result"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:textSize="24sp"
+            android:id="@+id/tv_specific_middle_open"
+            app:layout_constraintTop_toBottomOf="@id/tv_specific_middle_rating"
+            android:text="Store opened : "
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:textSize="24sp"
+            android:id="@+id/tv_specific_middle_openresult"
+            app:layout_constraintTop_toBottomOf="@id/tv_specific_middle_rating_result"
+            app:layout_constraintLeft_toRightOf="@id/tv_specific_middle_open"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:textSize="24sp"
+            app:layout_constraintTop_toBottomOf="@id/tv_specific_middle_open"
+            android:id="@+id/tv_specific_middle_address"
+            android:text="Address : "
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:textSize="24sp"
+            android:id="@+id/tv_specific_middle_addressresult"
+            app:layout_constraintTop_toBottomOf="@id/tv_specific_middle_openresult"
+            app:layout_constraintLeft_toRightOf="@id/tv_specific_middle_address"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content" />
+
+    </android.support.constraint.ConstraintLayout>
+
+    <com.google.android.gms.maps.MapView
+        android:id="@+id/map_specific"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/const_specific_middle"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"></com.google.android.gms.maps.MapView>
+
+    <!--가게 이름, 가게 사진, 가게 레이팅, 열려있는지, 가게 좌표 -->
+
+
 </android.support.constraint.ConstraintLayout>

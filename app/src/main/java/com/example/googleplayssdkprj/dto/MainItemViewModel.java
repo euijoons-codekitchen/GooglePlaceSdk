@@ -7,6 +7,7 @@ public class MainItemViewModel extends ViewModel {
     private static MainItemLiveData currentAddress;
     private static MainItemLiveData foundAddress;
     private static MainItemLiveData placeNearbyAddress;
+    private static KTStoreLiveData ktStoreData;
     //private static MainItemLiveData add
     static String TAG = MainItemViewModel.class.getName();
 
@@ -33,5 +34,11 @@ public class MainItemViewModel extends ViewModel {
             placeNearbyAddress = new MainItemLiveData();
         }
         return placeNearbyAddress;
+    }
+    public static KTStoreLiveData getKTStoreLiveData(){
+        if(ktStoreData == null){
+            ktStoreData = new KTStoreLiveData();
+        }
+        return ktStoreData;
     }
 }

@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.example.googleplayssdkprj.R;
 import com.example.googleplayssdkprj.dto.KTLocation;
+import com.example.googleplayssdkprj.dto.KTStore;
 import com.example.googleplayssdkprj.dto.MainItemViewModel;
 import com.example.googleplayssdkprj.helper.CurrentLocationManager;
 import com.example.googleplayssdkprj.presenter.FindByAddressPresenter;
@@ -24,6 +25,8 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -83,7 +86,7 @@ public class FindByAddressActivity extends AppCompatActivity
     public boolean onMarkerClick(Marker marker) {
         Log.d(TAG, "onMarkerClick: "+marker.getTitle());
         Toast.makeText(getApplicationContext(),marker.getTitle(),Toast.LENGTH_SHORT).show();
-        return true;
+        return false;
     }
 
     @Override
@@ -165,4 +168,8 @@ public class FindByAddressActivity extends AppCompatActivity
 
     }
 
+    @Override
+    public void drawMarkers(List<KTStore> stores) {
+
+    }
 }

@@ -38,7 +38,6 @@ public class PlacePickerActivity extends AppCompatActivity  implements GoogleApi
                 .addApi(com.google.android.gms.location.places.Places.GEO_DATA_API)
                 .build();
 
-
         try {
             startActivityForResult(builder.build(this), PLACE_PICKER_REQUEST);
             Log.d(TAG, "onCreate: ");

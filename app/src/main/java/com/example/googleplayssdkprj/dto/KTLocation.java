@@ -1,11 +1,13 @@
 package com.example.googleplayssdkprj.dto;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 public class KTLocation {
 
     private String formatted_address;
     private Double lat;
     private Double lon;
-
 
     public KTLocation() {
     }
