@@ -11,29 +11,12 @@
         android:id="@+id/const_mother_placenearby"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <TextView
-            android:text="Address = "
-            android:paddingTop="10dp"
-            android:paddingLeft="10dp"
-            android:layout_marginTop="20dp"
-            android:id="@+id/tv_placenearby"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+        <fragment android:id="@+id/autocomplete_fragment_nearby"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
+            />
 
-        <EditText
-            android:paddingRight="10dp"
-            app:layout_constraintRight_toRightOf="@id/btn_placenearby"
-            app:layout_constraintLeft_toRightOf="@id/tv_placenearby"
-            android:id="@+id/edit_placenearby"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content" />
-        <Button
-
-            android:text="Find"
-            app:layout_constraintRight_toRightOf="parent"
-            android:id="@+id/btn_placenearby"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
 
     </android.support.constraint.ConstraintLayout>
 

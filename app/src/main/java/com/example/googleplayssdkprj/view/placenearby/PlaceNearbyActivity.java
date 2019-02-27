@@ -28,6 +28,7 @@ import com.example.googleplayssdkprj.view.findbyaddress.FindByAddressActivity;
 import com.example.googleplayssdkprj.view.findbyaddress.OnLocationReadyView;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.internal.maps.zzt;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -36,8 +37,12 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
+import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -52,10 +57,6 @@ public class PlaceNearbyActivity extends AppCompatActivity
     private String TAG = PlaceNearbyActivity.class.getName();
     @BindView(R.id.tv_middle_placenearby)
     TextView textView;
-    @BindView(R.id.edit_placenearby)
-    EditText mEditText;
-    @BindView(R.id.btn_placenearby)
-    Button mButtonFindAddress;
     @BindView(R.id.btn_placenearby_findnearby)
     Button mButtonFindNearby;
     @BindView(R.id.spinner_placenearby)
@@ -86,17 +87,46 @@ public class PlaceNearbyActivity extends AppCompatActivity
         setSpinner();
 
         storeMap = new HashMap<>();
-        mButtonFindAddress.setOnClickListener((v)->{
-            presenter.getCurrentLocationFromServer(mEditText.getText().toString());
-
-        });
+//        mButtonFindAddress.setOnClickListener((v)->{
+//            presenter.getCurrentLocationFromServer(mEditText.getText().toString());
+//
+//        });
         mButtonFindNearby.setOnClickListener((v)->{
             //presenter.getNearbyInfoFromServer();
             mGoogleMap.clear();
             storeMap.clear();
             //getDefaultLocationAndDrawMarker();
-            presenter.getCurrentLocationFromServer(mEditText.getText().toString());
+            //resenter.getCurrentLocationFromServer(mEditText.getText().toString());
             presenter.getNearbyInfoFromServer(ktLocation,type, GlobalApplication.getApiKey(),"");
+        });
+
+        setAutoCompleteFragment();
+    }
+
+    public void setAutoCompleteFragment(){
+
+
+
+        AutocompleteSupportFragment autocompleteSupportFragment = (AutocompleteSupportFragment)
+                getSupportFragmentManager().findFragmentById(R.id.autocomplete_fragment_nearby);
+
+        List<Place.Field> fields = Arrays.asList(Place.Field.ID, Place.Field.NAME,Place.Field.LAT_LNG,Place.Field.ADDRESS);
+        autocompleteSupportFragment.setPlaceFields(fields);
+        autocompleteSupportFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+            @Override
+            public void onPlaceSelected(@NonNull Place place) {
+                Log.d(TAG, "onPlaceSelected: ");
+                ktLocation = new KTLocation();
+                ktLocation.setLat(place.getLatLng().latitude);
+                ktLocation.setLon(place.getLatLng().longitude);
+                ktLocation.setFormatted_address(place.getAddress());
+                presenter.getCurrentLocationFromServer(place.getAddress());
+            }
+
+            @Override
+            public void onError(@NonNull Status status) {
+                Log.d(TAG, "onError: ");
+            }
         });
     }
 
@@ -185,13 +215,11 @@ public class PlaceNearbyActivity extends AppCompatActivity
         markerOptions.position(currentLocation);
         markerOptions.title(ktLocation.getFormatted_address());
 
-        Marker marker;
-
         mGoogleMap.addMarker(markerOptions);
         mGoogleMap.moveCamera(CameraUpdateFactory.newLatLng(currentLocation));
         mGoogleMap.animateCamera(CameraUpdateFactory.zoomTo(13));
 
-
+        
         Toast.makeText(getApplicationContext(), ktLocation.getFormatted_address(), Toast.LENGTH_SHORT).show();
     }
 
