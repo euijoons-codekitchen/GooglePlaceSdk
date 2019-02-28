@@ -28,7 +28,9 @@ public class FindByAddressPresenter {
     public FindByAddressPresenter(OnLocationReadyView view){
         this.view = view;
         setupRetrofit();
+
     }
+
 
     private void setupRetrofit() {
         retrofit = RetrofitClient.getRetrofit();
@@ -57,7 +59,11 @@ public class FindByAddressPresenter {
                     Log.d(TAG, "onResponse: formatted_address" +formatted_address);
                     Log.d(TAG, "onResponse: lat : " +lat);
                     Log.d(TAG, "onResponse: lng : "+lng);
+
+
                     MainItemViewModel.getFoundAddress().setValue(formatted_address);
+
+
                     view.drawMarker(new KTLocation(formatted_address,lat,lng));
                 }
 

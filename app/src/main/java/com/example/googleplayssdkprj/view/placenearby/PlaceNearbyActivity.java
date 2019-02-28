@@ -52,7 +52,7 @@ import butterknife.ButterKnife;
 public class PlaceNearbyActivity extends AppCompatActivity
         implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener, OnLocationReadyView, AdapterView.OnItemSelectedListener
-        {
+{
 
     private String TAG = PlaceNearbyActivity.class.getName();
     @BindView(R.id.tv_middle_placenearby)
@@ -117,7 +117,24 @@ public class PlaceNearbyActivity extends AppCompatActivity
                 ktLocation.setLat(place.getLatLng().latitude);
                 ktLocation.setLon(place.getLatLng().longitude);
                 ktLocation.setFormatted_address(place.getAddress());
-                presenter.getCurrentLocationFromServer(place.getAddress());
+                presenter.getCurrentLocationFromServer(place.getAddress(),ktLocation1 -> {
+                    textView.setText(ktLocation1.getFormatted_address()+" "+ktLocation1.getLat()+" "+ktLocation1.getLon());
+
+
+                    Log.d(TAG, "onPlaceSelected: Consumer worked");
+                    LatLng currentLocation = new LatLng(ktLocation1.getLat(), ktLocation1.getLon());
+                    MarkerOptions markerOptions = new MarkerOptions();
+                    markerOptions.position(currentLocation);
+                    markerOptions.title(ktLocation1.getFormatted_address());
+
+                    mGoogleMap.addMarker(markerOptions);
+                    mGoogleMap.moveCamera(CameraUpdateFactory.newLatLng(currentLocation));
+                    mGoogleMap.animateCamera(CameraUpdateFactory.zoomTo(13));
+
+
+                    Toast.makeText(getApplicationContext(), ktLocation1.getFormatted_address(), Toast.LENGTH_SHORT).show();
+                });
+
             }
 
             @Override
@@ -216,7 +233,7 @@ public class PlaceNearbyActivity extends AppCompatActivity
         mGoogleMap.moveCamera(CameraUpdateFactory.newLatLng(currentLocation));
         mGoogleMap.animateCamera(CameraUpdateFactory.zoomTo(13));
 
-        
+
         Toast.makeText(getApplicationContext(), ktLocation.getFormatted_address(), Toast.LENGTH_SHORT).show();
     }
 

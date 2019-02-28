@@ -17,6 +17,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import io.reactivex.functions.BiConsumer;
+import io.reactivex.functions.Consumer;
 import okhttp3.Request;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -35,7 +37,8 @@ public class PlaceNearbyPresenter {
 
     }
 
-    public void getCurrentLocationFromServer(String keyword){
+
+    public void getCurrentLocationFromServer(String keyword, Consumer<KTLocation> readyViewConsumer ){
         Log.d(TAG, "getCurrentLocationFromServer: "+keyword);
         ApiService service = (ApiService) retrofit.create(ApiService.class);
         Call<HashMap<String,Object>> c = service.findByAddress(keyword, GlobalApplication.getApiKey());
@@ -60,7 +63,13 @@ public class PlaceNearbyPresenter {
                     Log.d(TAG, "onResponse: lat : " +lat);
                     Log.d(TAG, "onResponse: lng : "+lng);
                     //MainItemViewModel.getFoundAddress().setValue(formatted_address);
-                    view.drawMarker(new KTLocation(formatted_address,lat,lng));
+                    try {
+                        readyViewConsumer.accept(new KTLocation(formatted_address,lat,lng));
+                    }catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                    //readyView.drawMarker(new KTLocation(formatted_address,lat,lng));
                 }
 
             }
