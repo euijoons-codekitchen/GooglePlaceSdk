@@ -72,6 +72,8 @@ public class PlaceNearbyActivity extends AppCompatActivity
     private ArrayAdapter<CharSequence> adapter;
 
     private String type;
+
+    //
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,35 +83,30 @@ public class PlaceNearbyActivity extends AppCompatActivity
         //https://developers.google.com/places/web-service/supported_types?hl=ko#table2
         //현위치 마커 찍고 그 근처 선태한 분류(레스토랑, 공항, 은행등) 마커 찍기
         //그 마커 찍으면 그 마커에 해당하는 상세정보 뷰 액티비티 보여주기
-        //개꿀잼
+
         setPresenter(this);
         setmGoogleMap(savedInstanceState);
         setSpinner();
 
         storeMap = new HashMap<>();
-//        mButtonFindAddress.setOnClickListener((v)->{
-//            presenter.getCurrentLocationFromServer(mEditText.getText().toString());
-//
-//        });
+
         mButtonFindNearby.setOnClickListener((v)->{
             //presenter.getNearbyInfoFromServer();
             mGoogleMap.clear();
             storeMap.clear();
-            //getDefaultLocationAndDrawMarker();
-            //resenter.getCurrentLocationFromServer(mEditText.getText().toString());
             presenter.getNearbyInfoFromServer(ktLocation,type, GlobalApplication.getApiKey(),"");
+
         });
 
         setAutoCompleteFragment();
     }
 
-    public void setAutoCompleteFragment(){
-
-
+    public void setAutoCompleteFragment(){ //구글 플레이스 sdk, 자동완성 api
 
         AutocompleteSupportFragment autocompleteSupportFragment = (AutocompleteSupportFragment)
                 getSupportFragmentManager().findFragmentById(R.id.autocomplete_fragment_nearby);
 
+        //자동완성으로 가져올 데이터
         List<Place.Field> fields = Arrays.asList(Place.Field.ID, Place.Field.NAME,Place.Field.LAT_LNG,Place.Field.ADDRESS);
         autocompleteSupportFragment.setPlaceFields(fields);
         autocompleteSupportFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {

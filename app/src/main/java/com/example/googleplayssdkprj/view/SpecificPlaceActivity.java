@@ -72,7 +72,7 @@ public class SpecificPlaceActivity extends AppCompatActivity {
             mOpenResult.setText("OPENED");
         else
             mOpenResult.setText("CLOSED");
-        //mImageview.setImageURI(ktStore.getIconUrl());
+
         mAddressResult.setText(ktStore.getLocation().getFormatted_address());
 
     }

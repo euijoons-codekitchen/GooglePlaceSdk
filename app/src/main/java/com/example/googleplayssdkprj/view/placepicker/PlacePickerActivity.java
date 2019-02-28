@@ -13,72 +13,51 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.places.Place;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.libraries.places.api.Places;
 
 
+import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.net.PlacesClient;
+import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
+import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 
-public class PlacePickerActivity extends AppCompatActivity  implements GoogleApiClient.OnConnectionFailedListener,GoogleApiClient.ConnectionCallbacks {
+import java.lang.reflect.Field;
+import java.util.Arrays;
+import java.util.List;
+
+public class PlacePickerActivity extends AppCompatActivity  {
 
     String TAG = PlacePickerActivity.class.getName();
-    private int PLACE_PICKER_REQUEST = 1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_place_picker);
-
-        PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
-
-        PlacesClient placesClient = Places.createClient(this);
-
-        GoogleApiClient mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .enableAutoManage(this, 0, this)
-                .addApi(com.google.android.gms.location.places.Places.GEO_DATA_API)
-                .build();
-
-        try {
-            startActivityForResult(builder.build(this), PLACE_PICKER_REQUEST);
-            Log.d(TAG, "onCreate: ");
-        } catch (GooglePlayServicesRepairableException e) {
-            Log.d(TAG, "onCreate: ");
-            e.printStackTrace();
-        } catch (GooglePlayServicesNotAvailableException e) {
-            Log.d(TAG, "onCreate: ");
-            e.printStackTrace();
-        }
+        setUpAutoCompleteFragment();
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        Log.d(TAG, "onActivityResult: requestCode : " + requestCode);
-        Log.d(TAG, "onActivityResult: resultCode : " + resultCode);
-        if (requestCode == PLACE_PICKER_REQUEST) {
-            if (resultCode == RESULT_OK) {
-                Place selectedPlace = PlacePicker.getPlace(data, this);
-                // Do something with the place
-                Place place = PlacePicker.getPlace(data, this);
-                String toastMsg = String.format("Place: %s", place.getName());
-                Toast.makeText(this, toastMsg, Toast.LENGTH_LONG).show();
+    private void setUpAutoCompleteFragment() {
+        AutocompleteSupportFragment autocompleteSupportFragment 
+                = (AutocompleteSupportFragment)getSupportFragmentManager().
+                findFragmentById(R.id.autocomplete_fragment_place_picker);
+        
+        List<Place.Field> arrays = Arrays.asList(Place.Field.NAME,Place.Field.LAT_LNG,Place.Field.ADDRESS);
+        
+        autocompleteSupportFragment.setPlaceFields(arrays);
+        autocompleteSupportFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+            @Override
+            public void onPlaceSelected(@NonNull Place place) {
+                Log.d(TAG, "onPlaceSelected: ");
             }
-        }
 
+            @Override
+            public void onError(@NonNull Status status) {
+                Log.d(TAG, "onError: ");
+            }
+        });
     }
 
-    @Override
-    public void onConnected(@Nullable Bundle bundle) {
-        Log.d(TAG, "onConnected: ");
-    }
 
-    @Override
-    public void onConnectionSuspended(int i) {
-        Log.d(TAG, "onConnectionSuspended: ");
-    }   
-
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-        Log.d(TAG, "onConnectionFailed: ");
-    }
 }

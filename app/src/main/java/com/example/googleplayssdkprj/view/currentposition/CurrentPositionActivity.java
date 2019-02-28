@@ -49,11 +49,8 @@ public class CurrentPositionActivity extends AppCompatActivity implements OnMapR
         Log.d(TAG, "onCreate: ");
         ButterKnife.bind(this);
         setContentView(R.layout.activity_current_position);
-
         manager = new CurrentLocationManager(this,this);
         readyMap(savedInstanceState);
-
-
     }
 
     public void readyMap(Bundle savedInstanceState){

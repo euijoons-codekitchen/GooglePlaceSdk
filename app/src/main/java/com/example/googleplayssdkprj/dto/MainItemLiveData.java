@@ -15,9 +15,6 @@ public class MainItemLiveData extends MutableLiveData<String> {
 
         Log.d(TAG, "MainItemLiveData: ");
     }
-
-
-
     @Override
     protected void onActive() {
         super.onActive();

@@ -31,10 +31,6 @@ public class FindByAddressPresenter {
     }
 
     private void setupRetrofit() {
-//        retrofit = new Retrofit.Builder()
-//                .baseUrl("https://maps.googleapis.com/")
-//                .addConverterFactory(GsonConverterFactory.create())
-//                .build();
         retrofit = RetrofitClient.getRetrofit();
     }
 
@@ -58,9 +54,6 @@ public class FindByAddressPresenter {
                     LinkedTreeMap<String,Object> location = (LinkedTreeMap<String,Object>) geometry.get("location");
                     Double lat = (Double) location.get("lat");
                     Double lng = (Double) location.get("lng");
-
-
-
                     Log.d(TAG, "onResponse: formatted_address" +formatted_address);
                     Log.d(TAG, "onResponse: lat : " +lat);
                     Log.d(TAG, "onResponse: lng : "+lng);

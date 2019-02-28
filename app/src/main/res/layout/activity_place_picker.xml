@@ -7,10 +7,9 @@
     tools:context=".view.placepicker.PlacePickerActivity">
 
 
-
-    <com.google.android.gms.maps.MapView
-        android:id="@+id/map_place"
-        android:name="com.google.android.gms.maps.Map"
+    <fragment android:id="@+id/autocomplete_fragment_place_picker"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"></com.google.android.gms.maps.MapView>
+        android:layout_height="wrap_content"
+        android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
+        />
 </android.support.constraint.ConstraintLayout>

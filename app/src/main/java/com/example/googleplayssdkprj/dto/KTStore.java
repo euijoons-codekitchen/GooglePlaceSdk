@@ -6,6 +6,8 @@ import android.os.Parcelable;
 import java.io.Serializable;
 
 public class KTStore {
+
+    //위도 경도 주소 가게 정보. Place 객체와 유사
     private KTLocation location;
     private String name;
     private String iconUrl;

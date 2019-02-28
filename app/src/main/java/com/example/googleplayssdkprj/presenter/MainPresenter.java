@@ -22,21 +22,10 @@ public class MainPresenter {
     private MainView mainView;
     private List<MainItem> items;
 
-    MainItemViewModel model;
-
-
     public MainPresenter(MainView mainView){
         items = new ArrayList<>();
         this.mainView = mainView;
 
-    }
-
-    public void updateSpecificItem(String address, int index){
-
-        String[] originalStr = items.get(index).getTitle().split(" ");
-        String newAddress = originalStr[0]+" "+address;
-        items.get(index).setTitle(newAddress);
-        mainView.updateList(items);
     }
 
     public void setMainItems(){

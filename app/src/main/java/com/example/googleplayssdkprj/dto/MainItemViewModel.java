@@ -4,6 +4,8 @@ import android.arch.lifecycle.ViewModel;
 import android.util.Log;
 
 public class MainItemViewModel extends ViewModel {
+
+    //Live Data
     private static MainItemLiveData currentAddress;
     private static MainItemLiveData foundAddress;
     private static MainItemLiveData placeNearbyAddress;
@@ -15,6 +17,7 @@ public class MainItemViewModel extends ViewModel {
     public static MainItemLiveData getFoundAddress() {
         if(foundAddress == null){
             foundAddress = new MainItemLiveData();
+
             Log.d(TAG, "getFoundAddress: ");
         }
         return foundAddress;

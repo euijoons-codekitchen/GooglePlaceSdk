@@ -32,7 +32,7 @@ public class CurrentLocationManager {
 
     }
 
-    public KTLocation getCurrentLocation(){
+    public KTLocation getCurrentLocation(){ // 서버 요청 없이 안드로이드 내부 함수로 현위치 검색
         KTLocation ktLocation = new KTLocation();
         if (ActivityCompat.checkSelfPermission(GlobalApplication.getGlobalApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(GlobalApplication.getGlobalApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION)

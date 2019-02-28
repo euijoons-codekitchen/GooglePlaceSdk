@@ -5,6 +5,7 @@ import android.os.Parcelable;
 
 public class KTLocation {
 
+    //위도 경도 주소
     private String formatted_address;
     private Double lat;
     private Double lon;

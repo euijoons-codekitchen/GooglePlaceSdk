@@ -45,10 +45,7 @@ public class MainActivity extends AppCompatActivity implements MainView {
         setRecyclerViewConfig();
         setMainPresenterConfig();
         getCurrentLocationPermission();
-
         setLiveData();
-
-
     }
 
     public void setLiveData(){

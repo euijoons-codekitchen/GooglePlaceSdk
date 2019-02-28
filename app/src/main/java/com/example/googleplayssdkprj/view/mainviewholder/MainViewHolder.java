@@ -29,8 +29,6 @@ public class MainViewHolder extends RecyclerView.ViewHolder {
         itemView.setOnClickListener((view)->{
             onActivityChageListner.onMainItemClicked(index);
 
-            //onUpdateInfoListner.onUpdateChnage(index);
-
         });
     }
 }

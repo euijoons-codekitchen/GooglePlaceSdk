@@ -56,8 +56,6 @@ public class PlaceNearbyPresenter {
                     Double lat = (Double) location.get("lat");
                     Double lng = (Double) location.get("lng");
 
-
-
                     Log.d(TAG, "onResponse: formatted_address" +formatted_address);
                     Log.d(TAG, "onResponse: lat : " +lat);
                     Log.d(TAG, "onResponse: lng : "+lng);
@@ -78,6 +76,7 @@ public class PlaceNearbyPresenter {
     }
 
     public void getNearbyInfoFromServer(KTLocation ktLocation, String type, String apikey, String keyword){
+
 
         ApiService service = (ApiService) RetrofitClient.getRetrofit().create(ApiService.class);
         String parsedLocation = ktLocation.getLat()+","+ktLocation.getLon();

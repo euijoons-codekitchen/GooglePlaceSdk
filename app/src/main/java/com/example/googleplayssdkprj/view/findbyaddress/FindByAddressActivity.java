@@ -33,7 +33,7 @@ import butterknife.ButterKnife;
 
 public class FindByAddressActivity extends AppCompatActivity
         implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener, OnLocationReadyView ,GoogleMap.OnMarkerClickListener{
+        GoogleApiClient.OnConnectionFailedListener, OnLocationReadyView{
 
 
     private String TAG = FindByAddressActivity.class.getName();
@@ -52,6 +52,7 @@ public class FindByAddressActivity extends AppCompatActivity
     private FindByAddressPresenter presenter;
     private  GoogleApiClient mGoogleApiClient;
 
+    //입력한 주소를 바탕으로 서버 요청 보내서 주소 정보 가져오기
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,7 +65,6 @@ public class FindByAddressActivity extends AppCompatActivity
         button.setOnClickListener((v)->{
             Log.d(TAG, "setOnclickListner: " + editText.getText().toString());
             presenter.getCurrentLocationFromServer(editText.getText().toString());
-
         });
     }
 
@@ -83,13 +83,6 @@ public class FindByAddressActivity extends AppCompatActivity
     }
 
     @Override
-    public boolean onMarkerClick(Marker marker) {
-        Log.d(TAG, "onMarkerClick: "+marker.getTitle());
-        Toast.makeText(getApplicationContext(),marker.getTitle(),Toast.LENGTH_SHORT).show();
-        return false;
-    }
-
-    @Override
     public void drawMarker(KTLocation ktLocation) {
         Log.d(TAG, "drawMarker: ");
 
@@ -99,14 +92,7 @@ public class FindByAddressActivity extends AppCompatActivity
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(currentLocation);
         markerOptions.title(ktLocation.getFormatted_address());
-        mGoogleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-            @Override
-            public boolean onMarkerClick(Marker marker) {
-//                Log.d(TAG, "onMarkerClick: "+marker.getTitle());
-//                Toast.makeText(getApplicationContext(),marker.getTitle(),Toast.LENGTH_SHORT).show();
-                return true;
-            }
-        });
+
         mGoogleMap.addMarker(markerOptions);
         mGoogleMap.moveCamera(CameraUpdateFactory.newLatLng(currentLocation));
         mGoogleMap.animateCamera(CameraUpdateFactory.zoomTo(13));
